@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDS Primary Resources</title>
+    <style>
+        :root {
+            --primary-blue: #004080;
+            --primary-yellow: #FFD700;
+            --primary-white: #FFFFFF;
+            --accent-green: #4CAF50;
+            --accent-red: #E91E63;
+            --text-dark: #333333;
+            --text-light: #F5F5F5;
+            --section-bg: #F9F9F9;
+        }
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary-blue);
+            color: var(--primary-white);
+            padding: 2rem 0;
+            text-align: center;
+            background-image: url('https://www.churchofjesuschrist.org/bc/content/ldsorg/church/news/2017/12/13/15140-1-eng-1/15140_000_cover.jpg');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 64, 128, 0.7);
+        }
+        
+        header h1 {
+            position: relative;
+            font-size: 2.5rem;
+            margin: 0;
+            padding: 0 1rem;
+        }
+        
+        header p {
+            position: relative;
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 1rem auto;
+            padding: 0 1rem;
+        }
+        
+        nav {
+            background-color: var(--primary-blue);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            color: var(--primary-white);
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            display: block;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: var(--section-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            color: var(--primary-blue);
+            border-bottom: 3px solid var(--primary-yellow);
+            padding-bottom: 0.5rem;
+            margin-top: 0;
+        }
+        
+        h3 {
+            color: var(--primary-blue);
+        }
+        
+        .program-card {
+            background-color: var(--primary-white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .program-card h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+        }
+        
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .activity-card {
+            background-color: var(--primary-white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .activity-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .activity-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .activity-card-content {
+            padding: 1.5rem;
+        }
+        
+        .printables-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .printable-card {
+            background-color: var(--primary-white);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .printable-card h3 {
+            color: var(--accent-green);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-blue);
+            color: var(--primary-white);
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #002b57;
+        }
+        
+        .btn-pink {
+            background-color: var(--accent-red);
+        }
+        
+        .btn-pink:hover {
+            background-color: #c2185b;
+        }
+        
+        .how-to-steps {
+            counter-reset: step-counter;
+        }
+        
+        .how-to-step {
+            position: relative;
+            padding-left: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .how-to-step::before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background-color: var(--primary-blue);
+            color: var(--primary-white);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: var(--primary-blue);
+            color: var(--primary-white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            
+            .printables-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>LDS Primary Resources</h1>
+        <p>Helping Primary leaders and teachers with lesson ideas, activities, and printables</p>
+    </header>
+    
+    <nav>
+        <ul>
+            <li><a href="#come-follow-me">Come Follow Me</a></li>
+            <li><a href="#activities">Activities</a></li>
+            <li><a href="#printables">Printables</a></li>
+            <li><a href="#how-to">How To</a></li>
+        </ul>
+    </nav>
+    
+    <div class="container">
+        <section id="come-follow-me">
+            <h2>Come Follow Me Program</h2>
+            
+            <div class="program-card">
+                <h3>2023 Primary Curriculum</h3>
+                <p>Resources for teaching Come Follow Me in Primary this year. Find weekly lesson helps, singing time ideas, and activity pages.</p>
+                <a href="#" class="btn">View Monthly Lessons</a>
+            </div>
+            
+            <div class="program-card">
+                <h3>Nursery Resources</h3>
+                <p>Simple activities and lessons adapted for our youngest Primary children (18 months to 3 years).</p>
+                <a href="#" class="btn">Nursery Ideas</a>
+            </div>
+            
+            <div class="program-card">
+                <h3>Senior Primary Adaptations</h3>
+                <p>Discussion questions and activities specifically tailored for older Primary children (ages 8-11).</p>
+                <a href="#" class="btn">Senior Primary Helps</a>
+            </div>
+        </section>
+        
+        <section id="activities">
+            <h2>Primary Activities</h2>
+            
+            <div class="activity-grid">
+                <div class="activity-card">
+                    <img src="https://www.churchofjesuschrist.org/bc/content/ldsorg/church/news/2017/12/13/15140-1-eng-1/15140_000_cover.jpg" alt="Singing Time">
+                    <div class="activity-card-content">
+                        <h3>Singing Time Ideas</h3>
+                        <p>Engaging ways to teach Primary songs with movement, games, and visual aids.</p>
+                        <a href="#" class="btn">View Activities</a>
+                    </div>
+                </div>
+                
+                <div class="activity-card">
+                    <img src="https://www.churchofjesuschrist.org/bc/content/ldsorg/church/news/2017/12/13/15140-1-eng-1/15140_000_cover.jpg" alt="Lesson Activities">
+                    <div class="activity-card-content">
+                        <h3>Lesson Activities</h3>
+                        <p>Hands-on activities to reinforce weekly Come Follow Me lessons.</p>
+                        <a href="#" class="btn">View Activities</a>
+                    </div>
+                </div>
+                
+                <div class="activity-card">
+                    <img src="https://www.churchofjesuschrist.org/bc/content/ldsorg/church/news/2017/12/13/15140-1-eng-1/15140_000_cover.jpg" alt="Seasonal Activities">
+                    <div class="activity-card-content">
+                        <h3>Seasonal Activities</h3>
+                        <p>Special activities for holidays and seasonal events throughout the year.</p>
+                        <a href="#" class="btn">View Activities</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="printables">
+            <h2>Primary Printables</h2>
+            
+            <div class="printables-section">
+                <div class="printable-card">
+                    <h3>Free Downloads</h3>
+                    <p>High-quality printables available for free download:</p>
+                    <ul style="text-align: left; margin-left: 2rem;">
+                        <li>Coloring pages</li>
+                        <li>Posters</li>
+                        <li>Activity sheets</li>
+                        <li>Visual aids</li>
+                    </ul>
+                    <a href="#" class="btn">Download Free Printables</a>
+                </div>
+                
+                <div class="printable-card">
+                    <h3>Premium Printables</h3>
+                    <p>Beautiful, professionally designed printables available for purchase:</p>
+                    <ul style="text-align: left; margin-left: 2rem;">
+                        <li>Complete lesson kits</li>
+                        <li>Bulletin board sets</li>
+                        <li>Game bundles</li>
+                        <li>Custom name tags</li>
+                    </ul>
+                    <a href="https://www.etsy.com" class="btn btn-pink">Visit Our Etsy Shop</a>
+                </div>
+            </div>
+        </section>
+        
+        <section id="how-to">
+            <h2>How To Teach in Primary</h2>
+            
+            <div class="how-to-steps">
+                <div class="how-to-step">
+                    <h3>Prepare Spiritually</h3>
+                    <p>Begin your preparation by studying the scriptures and lesson materials prayerfully. Seek guidance from the Spirit about what your class needs.</p>
+                </div>
+                
+                <div class="how-to-step">
+                    <h3>Know the Children</h3>
+                    <p>Learn about the children you teach - their interests, learning styles, and needs. Tailor your lessons to help each child feel valued.</p>
+                </div>
+                
+                <div class="how-to-step">
+                    <h3>Create Engaging Lessons</h3>
+                    <p>Use a variety of teaching methods including stories, songs, object lessons, and activities to engage different learning styles.</p>
+                </div>
+                
+                <div class="how-to-step">
+                    <h3>Invite Participation</h3>
+                    <p>Encourage children to share their thoughts and experiences. Ask open-ended questions and create opportunities for discussion.</p>
+                </div>
+                
+                <div class="how-to-step">
+                    <h3>Bear Testimony</h3>
+                    <p>Share your testimony of gospel truths frequently. Help children recognize and share their own growing testimonies.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>&copy; 2023 LDS Primary Resources. This is not an official website of The Church of Jesus Christ of Latter-day Saints.</p>
+    </footer>
+</body>
+</html>
