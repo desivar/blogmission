@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --pink: #ff9ff3;
+            --purple: #f368e0;
+            --yellow: #feca57;
+            --green: #1dd1a1;
+            --blue: #54a0ff;
+            --white: #fff;
+            --dark: #2f3640;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9f3ff;
+            color: var(--dark);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .birthday-card {
+            position: relative;
+            width: 90%;
+            max-width: 600px;
+            background: linear-gradient(135deg, #fff, #fce4ff);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .card-inner {
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--purple);
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: fadeIn 1s ease;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            animation: fadeIn 1.5s ease;
+        }
+        
+        .special {
+            font-weight: 600;
+            color: var(--purple);
+            font-size: 1.2rem;
+        }
+        
+        .code-snippet {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            text-align: left;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 1s ease;
+        }
+        
+        .code-snippet::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--pink), var(--purple));
+        }
+        
+        .comment {
+            color: #7f8c8d;
+        }
+        
+        .function {
+            color: var(--yellow);
+        }
+        
+        .string {
+            color: var(--green);
+        }
+        
+        .number {
+            color: var(--blue);
+        }
+        
+        .flower {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.8;
+            z-index: -1;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .flower-1 {
+            top: 20px;
+            left: 30px;
+            color: var(--pink);
+            animation-delay: 0s;
+        }
+        
+        .flower-2 {
+            top: 50px;
+            right: 40px;
+            color: var(--purple);
+            animation-delay: 1s;
+        }
+        
+        .flower-3 {
+            bottom: 30px;
+            left: 40px;
+            color: var(--yellow);
+            animation-delay: 2s;
+        }
+        
+        .flower-4 {
+            bottom: 60px;
+            right: 50px;
+            color: var(--green);
+            animation-delay: 3s;
+        }
+        
+        .cake {
+            font-size: 3rem;
+            margin: 20px 0;
+            display: inline-block;
+            animation: bounce 2s infinite;
+        }
+        
+        .balloons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 50px;
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: floatUp 8s linear infinite;
+        }
+        
+        .balloon::before {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 15px;
+            background-color: rgba(0,0,0,0.2);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--pink);
+            opacity: 0;
+            animation: confettiFall 5s linear infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.7; }
+            100% { 
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes confettiFall {
+            0% { 
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% { 
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .signature {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8rem;
+            color: var(--purple);
+            margin-top: 20px;
+            animation: fadeIn 2s ease;
+        }
+        
+        .hearts {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--pink);
+            opacity: 0;
+            animation: heartFloat 6s linear infinite;
+        }
+        
+        @keyframes heartFloat {
+            0% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { 
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .birthday-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="birthday-card">
+        <!-- Floating Flowers -->
+        <i class="fas fa-spa flower flower-1"></i>
+        <i class="fas fa-leaf flower flower-2"></i>
+        <i class="fas fa-seedling flower flower-3"></i>
+        <i class="fas fa-feather-alt flower flower-4"></i>
+        
+        <!-- Balloons -->
+        <div class="balloons" id="balloons"></div>
+        
+        <!-- Hearts -->
+        <div class="hearts" id="hearts"></div>
+        
+        <!-- Confetti -->
+        <div id="confetti"></div>
+        
+        <div class="card-inner">
+            <h1>Happy Birthday!</h1>
+            
+            <p>Dear <span class="special">Amazing Developer</span>,</p>
+            
+            <p>Wishing you a day filled with joy, laughter, and bug-free code! 🎉</p>
+            
+            <div class="code-snippet">
+                <span class="comment">// Birthday wishes function</span><br>
+                <span class="function">function</span> celebrateBirthday(<span class="string">'you'</span>) {<br>
+                &nbsp;&nbsp;<span class="function">return</span> {<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;happiness: <span class="number">100</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;success: <span class="number">100</span>,<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;love: <span class="number">Infinity</span><br>
+                &nbsp;&nbsp;};<br>
+                }
+            </div>
+            
+            <p>May your year ahead be as elegant as your code and as satisfying as a successful build!</p>
+            
+            <div class="cake">🎂</div>
+            
+            <p>With love and admiration for all that you are and all that you do.</p>
+            
+            <div class="signature">[Your Name]</div>
+        </div>
+    </div>
+
+    <script>
+        // Create balloons
+        const balloonsContainer = document.getElementById('balloons');
+        const colors = ['#ff9ff3', '#feca57', '#1dd1a1', '#54a0ff', '#f368e0'];
+        
+        for (let i = 0; i < 15; i++) {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.style.left = Math.random() * 100 + '%';
+            balloon.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.animationDuration = (6 + Math.random() * 7) + 's';
+            balloon.style.animationDelay = Math.random() * 5 + 's';
+            balloonsContainer.appendChild(balloon);
+        }
+        
+        // Create hearts
+        const heartsContainer = document.getElementById('hearts');
+        
+        for (let i = 0; i < 10; i++) {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '<i class="fas fa-heart"></i>';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (8 + Math.random() * 7) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            heart.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+            heartsContainer.appendChild(heart);
+        }
+        
+        // Create confetti
+        const confettiContainer = document.getElementById('confetti');
+        const confettiColors = ['#ff9ff3', '#feca57', '#1dd1a1', '#54a0ff', '#f368e0', '#fff'];
+        
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+            confetti.style.animationDuration = (3 + Math.random() * 4) + 's';
+            confetti.style.animationDelay = Math.random() * 5 + 's';
+            confetti.style.width = (5 + Math.random() * 10) + 'px';
+            confetti.style.height = (5 + Math.random() * 10) + 'px';
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            confettiContainer.appendChild(confetti);
+        }
+        
+        // Interactive click effect
+        document.addEventListener('click', function(e) {
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            // Create burst effect
+            for (let i = 0; i < 10; i++) {
+                const burst = document.createElement('div');
+                burst.className = 'confetti';
+                burst.style.left = x + 'px';
+                burst.style.top = y + 'px';
+                burst.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                burst.style.animation = 'none';
+                burst.style.transition = 'all 0.5s ease-out';
+                burst.style.width = '8px';
+                burst.style.height = '8px';
+                burst.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                document.body.appendChild(burst);
+                
+                // Animate burst
+                setTimeout(() => {
+                    burst.style.transform = `translate(${(Math.random() - 0.5) * 200}px, ${(Math.random() - 0.5) * 200}px)`;
+                    burst.style.opacity = '0';
+                }, 10);
+                
+                // Remove after animation
+                setTimeout(() => {
+                    burst.remove();
+                }, 600);
+            }
+        });
+        
+        // Typewriter effect for signature
+        const signature = document.querySelector('.signature');
+        const originalText = signature.textContent;
+        signature.textContent = '';
+        
+        let i = 0;
+        const typing = setInterval(() => {
+            signature.textContent += originalText[i];
+            i++;
+            if (i >= originalText.length) {
+                clearInterval(typing);
+            }
+        }, 100);
+    </script>
+</body>
+</html>
