@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Chemical Lab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a8cff;
+            --secondary: #ff6b6b;
+            --accent: #4ecdc4;
+            --dark: #2d3436;
+            --light: #f7f7f7;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+            --glass: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .lab-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            color: var(--primary);
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .element-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 180px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .element-selection:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        select, input[type="number"] {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 140, 255, 0.2);
+        }
+
+        button {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--primary) 0%, #6a5acd 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px auto;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .lab-bench {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 30px;
+            margin-bottom: 30px;
+            min-height: 250px;
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .beaker {
+            position: relative;
+            width: 90px;
+            height: 160px;
+            border: 3px solid var(--glass);
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .beaker::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -10px;
+            width: 15px;
+            height: 40px;
+            border-left: 3px solid var(--glass);
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .beaker::after {
+            content: '';
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70%;
+            height: 8px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+        }
+
+        .label {
+            position: absolute;
+            top: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--dark);
+            text-align: center;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .content {
+            width: 70%;
+            border-radius: 8px 8px 0 0;
+            position: absolute;
+            bottom: 0;
+            transition: all 0.5s ease;
+            opacity: 0.85;
+        }
+
+        /* Element colors */
+        .hydrogen { background-color: #a6d8ff; }
+        .oxygen { background-color: #ffb3ba; }
+        .sodium { background-color: #fff2a8; }
+        .chlorine { background-color: #c1f0c1; }
+
+        /* Product colors */
+        .water { background-color: #88d8ff; }
+        .salt { background-color: #f0f0f0; border-top: 3px dotted #ccc; }
+        .hydrogen-peroxide { background-color: #b3e0ff; }
+        .sodium-hydroxide { background-color: #ffe6b3; }
+        .hydrochloric-acid { background-color: #b3e6ff; }
+
+        .info-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        #result {
+            font-size: 1.6rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        #reactionDiagram {
+            font-size: 1.2rem;
+            color: var(--dark);
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        #product-image {
+            margin-top: 20px;
+        }
+
+        #product-image img {
+            max-width: 80px;
+            height: auto;
+            transition: all 0.3s ease;
+        }
+
+        #product-image img:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        /* Animations */
+        @keyframes pour {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(0.9); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        @keyframes swirl {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(5deg) scale(1.05); }
+            50% { transform: rotate(0deg) scale(1.1); }
+            75% { transform: rotate(-5deg) scale(1.05); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+
+        @keyframes bubble {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        @keyframes appear {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-pour {
+            animation: pour 1s ease-in-out;
+        }
+
+        .animate-swirl {
+            animation: swirl 1.5s ease-in-out infinite;
+        }
+
+        .animate-bubble {
+            animation: bubble 2s ease-in-out infinite;
+        }
+
+        .animate-appear {
+            animation: appear 0.5s ease-out forwards;
+        }
+
+        /* Decorative elements */
+        .bubbles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: floatUp 8s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .lab-bench {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 20px;
+            }
+            
+            .beaker {
+                width: 80px;
+                height: 140px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--dark);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="lab-container">
+        <div class="bubbles" id="bubbles"></div>
+        
+        <h1>
+            <i class="fas fa-flask"></i>
+            Virtual Chemical Lab
+            <i class="fas fa-atom"></i>
+        </h1>
+        
+        <div class="controls">
+            <div class="element-selection">
+                <label for="element1">
+                    <i class="fas fa-atom" style="color: #a6d8ff;"></i>
+                    Element 1:
+                </label>
+                <select id="element1">
+                    <option value="H">Hydrogen (H)</option>
+                    <option value="O">Oxygen (O)</option>
+                    <option value="Na">Sodium (Na)</option>
+                    <option value="Cl">Chlorine (Cl)</option>
+                </select>
+                <input type="number" id="quantity1" placeholder="Quantity" min="1" value="1">
+            </div>
+            
+            <div class="element-selection">
+                <label for="element2">
+                    <i class="fas fa-atom" style="color: #ffb3ba;"></i>
+                    Element 2:
+                </label>
+                <select id="element2">
+                    <option value="O">Oxygen (O)</option>
+                    <option value="H">Hydrogen (H)</option>
+                    <option value="Na">Sodium (Na)</option>
+                    <option value="Cl">Chlorine (Cl)</option>
+                </select>
+                <input type="number" id="quantity2" placeholder="Quantity" min="1" value="1">
+            </div>
+            
+            <div class="element-selection">
+                <label for="element3">
+                    <i class="fas fa-atom" style="color: #c1f0c1;"></i>
+                    Element 3:
+                </label>
+                <select id="element3">
+                    <option value="">None</option>
+                    <option value="H">Hydrogen (H)</option>
+                    <option value="O">Oxygen (O)</option>
+                    <option value="Na">Sodium (Na)</option>
+                    <option value="Cl">Chlorine (Cl)</option>
+                </select>
+                <input type="number" id="quantity3" placeholder="Quantity" min="0" value="0">
+            </div>
+        </div>
+        
+        <button id="mixButton">
+            <i class="fas fa-magic"></i>
+            Mix Elements
+        </button>
+        
+        <div class="lab-bench">
+            <div id="reactant-beaker-1" class="beaker">
+                <div class="label" id="reactant-label-1"></div>
+                <div class="content" id="reactant-content-1"></div>
+            </div>
+            
+            <div id="reactant-beaker-2" class="beaker">
+                <div class="label" id="reactant-label-2"></div>
+                <div class="content" id="reactant-content-2"></div>
+            </div>
+            
+            <div id="reactant-beaker-3" class="beaker">
+                <div class="label" id="reactant-label-3"></div>
+                <div class="content" id="reactant-content-3"></div>
+            </div>
+            
+            <div id="reaction-flask" class="beaker" style="width: 100px; height: 180px;">
+                <div class="content" id="reaction-content"></div>
+            </div>
+            
+            <div id="product-beaker" class="beaker">
+                <div class="label" id="product-label"></div>
+                <div class="content" id="product-content"></div>
+            </div>
+        </div>
+        
+        <div id="reaction-info" class="info-panel">
+            <div id="result">Select elements and click "Mix"</div>
+            <div id="reactionDiagram"></div>
+            <div id="product-image"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create bubbles for decoration
+            const bubblesContainer = document.getElementById('bubbles');
+            for (let i = 0; i < 20; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.width = (5 + Math.random() * 15) + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.animationDuration = (5 + Math.random() * 10) + 's';
+                bubble.style.animationDelay = Math.random() * 5 + 's';
+                bubblesContainer.appendChild(bubble);
+            }
+
+            // Element references
+            const element1Select = document.getElementById('element1');
+            const quantity1Input = document.getElementById('quantity1');
+            const element2Select = document.getElementById('element2');
+            const quantity2Input = document.getElementById('quantity2');
+            const element3Select = document.getElementById('element3');
+            const quantity3Input = document.getElementById('quantity3');
+            const mixButton = document.getElementById('mixButton');
+
+            // Beaker references
+            const reactantBeaker1 = document.getElementById('reactant-beaker-1');
+            const reactantContent1 = document.getElementById('reactant-content-1');
+            const reactantLabel1 = document.getElementById('reactant-label-1');
+            const reactantBeaker2 = document.getElementById('reactant-beaker-2');
+            const reactantContent2 = document.getElementById('reactant-content-2');
+            const reactantLabel2 = document.getElementById('reactant-label-2');
+            const reactantBeaker3 = document.getElementById('reactant-beaker-3');
+            const reactantContent3 = document.getElementById('reactant-content-3');
+            const reactantLabel3 = document.getElementById('reactant-label-3');
+            const reactionFlask = document.getElementById('reaction-flask');
+            const reactionContent = document.getElementById('reaction-content');
+            const productBeaker = document.getElementById('product-beaker');
+            const productContent = document.getElementById('product-content');
+            const productLabel = document.getElementById('product-label');
+            const resultDiv = document.getElementById('result');
+            const reactionDiagramDiv = document.getElementById('reactionDiagram');
+            const productImageDiv = document.getElementById('product-image');
+
+            // Element colors and icons mapping
+            const elementProperties = {
+                'H': { color: '#a6d8ff', icon: '⛢', name: 'Hydrogen' },
+                'O': { color: '#ffb3ba', icon: '⚷', name: 'Oxygen' },
+                'Na': { color: '#fff2a8', icon: '♁', name: 'Sodium' },
+                'Cl': { color: '#c1f0c1', icon: '⚳', name: 'Chlorine' }
+            };
+
+            // Product properties
+            const productProperties = {
+                'water': { color: '#88d8ff', icon: '💧', name: 'Water (H₂O)' },
+                'salt': { color: '#f0f0f0', icon: '🧂', name: 'Salt (NaCl)' },
+                'hydrogen-peroxide': { color: '#b3e0ff', icon: '🧴', name: 'Hydrogen Peroxide (H₂O₂)' },
+                'sodium-hydroxide': { color: '#ffe6b3', icon: '⚠️', name: 'Sodium Hydroxide (NaOH)' },
+                'hydrochloric-acid': { color: '#b3e6ff', icon: '🧪', name: 'Hydrochloric Acid (HCl)' }
+            };
+
+            // Update beaker content based on selected element
+            function updateBeakerContent(contentElement, labelElement, element, quantity) {
+                if (element && quantity > 0) {
+                    const elemProps = elementProperties[element];
+                    contentElement.style.backgroundColor = elemProps.color;
+                    labelElement.textContent = `${elemProps.icon} ${elemProps.name} (${quantity})`;
+                    contentElement.style.height = `${Math.min(90, 20 + quantity * 10)}%`;
+                } else {
+                    contentElement.style.backgroundColor = 'transparent';
+                    labelElement.textContent = '';
+                    contentElement.style.height = '0%';
+                }
+            }
+
+            // Initialize beakers
+            updateBeakerContent(reactantContent1, reactantLabel1, element1Select.value, quantity1Input.value);
+            updateBeakerContent(reactantContent2, reactantLabel2, element2Select.value, quantity2Input.value);
+            updateBeakerContent(reactantContent3, reactantLabel3, element3Select.value, quantity3Input.value);
+
+            // Event listeners for element changes
+            element1Select.addEventListener('change', () => {
+                updateBeakerContent(reactantContent1, reactantLabel1, element1Select.value, quantity1Input.value);
+            });
+
+            quantity1Input.addEventListener('input', () => {
+                updateBeakerContent(reactantContent1, reactantLabel1, element1Select.value, quantity1Input.value);
+            });
+
+            element2Select.addEventListener('change', () => {
+                updateBeakerContent(reactantContent2, reactantLabel2, element2Select.value, quantity2Input.value);
+            });
+
+            quantity2Input.addEventListener('input', () => {
+                updateBeakerContent(reactantContent2, reactantLabel2, element2Select.value, quantity2Input.value);
+            });
+
+            element3Select.addEventListener('change', () => {
+                updateBeakerContent(reactantContent3, reactantLabel3, element3Select.value, quantity3Input.value);
+            });
+
+            quantity3Input.addEventListener('input', () => {
+                updateBeakerContent(reactantContent3, reactantLabel3, element3Select.value, quantity3Input.value);
+            });
+
+            // Mix button click handler
+            mixButton.addEventListener('click', () => {
+                const element1 = element1Select.value;
+                const quantity1 = parseInt(quantity1Input.value) || 0;
+                const element2 = element2Select.value;
+                const quantity2 = parseInt(quantity2Input.value) || 0;
+                const element3 = element3Select.value;
+                const quantity3 = parseInt(quantity3Input.value) || 0;
+
+                // Reset previous results
+                resultDiv.textContent = '';
+                reactionDiagramDiv.textContent = '';
+                productImageDiv.innerHTML = '';
+                productContent.className = 'content';
+                productLabel.textContent = '';
+                reactionContent.style.backgroundColor = 'transparent';
+
+                // Determine the reaction
+                const reaction = determineReaction(element1, quantity1, element2, quantity2, element3, quantity3);
+
+                if (reaction) {
+                    animateReaction(reaction);
+                } else {
+                    showError("No valid reaction for these elements/quantities");
+                }
+            });
+
+            // Determine the chemical reaction based on inputs
+            function determineReaction(e1, q1, e2, q2, e3, q3) {
+                const elements = [];
+                if (e1 && q1 > 0) elements.push({ symbol: e1, quantity: q1 });
+                if (e2 && q2 > 0) elements.push({ symbol: e2, quantity: q2 });
+                if (e3 && q3 > 0) elements.push({ symbol: e3, quantity: q3 });
+
+                // Sort elements for consistent comparison
+                elements.sort((a, b) => a.symbol.localeCompare(b.symbol));
+
+                // Check for known reactions
+                if (elements.length === 2) {
+                    const [elem1, elem2] = elements;
+                    
+                    // Water: 2H + O → H₂O
+                    if (elem1.symbol === 'H' && elem2.symbol === 'O' && elem1.quantity >= 2 && elem2.quantity >= 1) {
+                        return {
+                            type: 'water',
+                            equation: '2H + O → H₂O',
+                            reactants: elements,
+                            product: { 
+                                type: 'water', 
+                                quantity: Math.min(Math.floor(elem1.quantity/2), elem2.quantity) 
+                            }
+                        };
+                    }
+                    // Salt: Na + Cl → NaCl
+                    else if (elem1.symbol === 'Cl' && elem2.symbol === 'Na' && elem1.quantity >= 1 && elem2.quantity >= 1) {
+                        return {
+                            type: 'salt',
+                            equation: 'Na + Cl → NaCl',
+                            reactants: elements,
+                            product: { 
+                                type: 'salt', 
+                                quantity: Math.min(elem1.quantity, elem2.quantity) 
+                            }
+                        };
+                    }
+                }
+                else if (elements.length === 3) {
+                    const [elem1, elem2, elem3] = elements;
+                    
+                    // Hydrogen Peroxide: 2H + 2O → H₂O₂
+                    if (elem1.symbol === 'H' && elem2.symbol === 'O' && elem3.symbol === 'O' && 
+                        elem1.quantity >= 2 && elem2.quantity >= 1 && elem3.quantity >= 1) {
+                        return {
+                            type: 'hydrogen-peroxide',
+                            equation: '2H + 2O → H₂O₂',
+                            reactants: elements,
+                            product: { 
+                                type: 'hydrogen-peroxide', 
+                                quantity: Math.min(Math.floor(elem1.quantity/2), elem2.quantity, elem3.quantity) 
+                            }
+                        };
+                    }
+                }
+
+                return null;
+            }
+
+            // Animate the chemical reaction
+            function animateReaction(reaction) {
+                // Reset any previous animations
+                reactionContent.classList.remove('animate-swirl');
+                productContent.classList.remove('animate-appear');
+
+                // Get reactant beakers that have content
+                const activeReactants = [
+                    { beaker: reactantBeaker1, content: reactantContent1, element: element1Select.value },
+                    { beaker: reactantBeaker2, content: reactantContent2, element: element2Select.value },
+                    { beaker: reactantBeaker3, content: reactantContent3, element: element3Select.value }
+                ].filter(item => item.element && (item.element === 'H' || item.element === 'O' || item.element === 'Na' || item.element === 'Cl'));
+
+                // Animate pouring from each reactant beaker to reaction flask
+                activeReactants.forEach((reactant, index) => {
+                    setTimeout(() => {
+                        // Animate the pouring motion
+                        reactant.beaker.classList.add('animate-pour');
+                        
+                        // Transfer color to reaction flask
+                        const color = window.getComputedStyle(reactant.content).backgroundColor;
+                        reactionContent.style.backgroundColor = color;
+                        
+                        // Reduce the reactant content
+                        const currentHeight = parseInt(reactant.content.style.height || '0');
+                        reactant.content.style.height = `${Math.max(0, currentHeight - 30)}%`;
+                        
+                    }, index * 500);
+                });
+
+                // After pouring, show the reaction
+                setTimeout(() => {
+                    // Clear the pour animation
+                    activeReactants.forEach(reactant => {
+                        reactant.beaker.classList.remove('animate-pour');
+                    });
+
+                    // Show reaction in the flask
+                    reactionContent.classList.add('animate-swirl');
+                    reactionContent.style.backgroundColor = productProperties[reaction.type].color;
+                    
+                    // Display reaction info
+                    resultDiv.textContent = `Created: ${productProperties[reaction.type].name}`;
+                    reactionDiagramDiv.textContent = reaction.equation;
+                    productImageDiv.innerHTML = `<div style="font-size: 3rem;">${productProperties[reaction.type].icon}</div>`;
+
+                    // After reaction completes, show product
+                    setTimeout(() => {
+                        reactionContent.classList.remove('animate-swirl');
+                        reactionContent.style.backgroundColor = 'transparent';
+                        
+                        // Show product in product beaker
+                        productContent.classList.add(reaction.type, 'animate-appear');
+                        productContent.style.backgroundColor = productProperties[reaction.type].color;
+                        productContent.style.height = `${20 + reaction.product.quantity * 10}%`;
+                        productLabel.textContent = productProperties[reaction.type].name.split(' ')[0];
+                        
+                    }, 2000);
+                    
+                }, activeReactants.length * 500 + 500);
+            }
+
+            // Show error message
+            function showError(message) {
+                resultDiv.textContent = message;
+                resultDiv.style.color = 'red';
+                
+                // Shake the beakers to indicate error
+                [reactantBeaker1, reactantBeaker2, reactantBeaker3, reactionFlask, productBeaker].forEach(beaker => {
+                    beaker.style.animation = 'shake 0.5s';
+                });
+                
+                setTimeout(() => {
+                    [reactantBeaker1, reactantBeaker2, reactantBeaker3, reactionFlask, productBeaker].forEach(beaker => {
+                        beaker.style.animation = '';
+                    });
+                }, 500);
+            }
+
+            // Add shake animation for errors
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    20%, 60% { transform: translateX(-5px); }
+                    40%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>
